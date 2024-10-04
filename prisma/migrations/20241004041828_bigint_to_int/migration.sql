@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "cars" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" VARCHAR,
     "manufacturer" VARCHAR,
     "licenseNumber" VARCHAR,
@@ -15,7 +15,7 @@ CREATE TABLE "cars" (
     "price" INTEGER,
     "createdAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "createBy" VARCHAR,
-    "updateAt" TIMESTAMP(6),
+    "updateAt" TIMESTAMP(3),
     "updateBy" VARCHAR,
 
     CONSTRAINT "cars_pkey" PRIMARY KEY ("id")
@@ -23,20 +23,20 @@ CREATE TABLE "cars" (
 
 -- CreateTable
 CREATE TABLE "orders" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "orderNumber" VARCHAR,
-    "car_id" BIGINT,
-    "user_id" BIGINT,
-    "payment_id" BIGINT,
+    "car_id" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "payment_id" INTEGER NOT NULL,
     "status" VARCHAR,
     "paymentReceipt" TEXT,
     "total" DOUBLE PRECISION,
     "isDriver" BOOLEAN,
     "startTime" TIMESTAMP(6),
     "finishTime" TIMESTAMP(6),
-    "createdAt" TIMESTAMP(6),
+    "createdAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "createBy" VARCHAR,
-    "updateAt" TIMESTAMP(6),
+    "updateAt" TIMESTAMP(3),
     "updateBy" VARCHAR,
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
@@ -44,13 +44,13 @@ CREATE TABLE "orders" (
 
 -- CreateTable
 CREATE TABLE "payments" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "type" VARCHAR,
     "company" VARCHAR,
     "accountNumber" VARCHAR,
-    "createdAt" TIMESTAMP(6),
+    "createdAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "createBy" VARCHAR,
-    "updateAt" TIMESTAMP(6),
+    "updateAt" TIMESTAMP(3),
     "updateBy" VARCHAR,
 
     CONSTRAINT "payments_pkey" PRIMARY KEY ("id")
@@ -58,7 +58,7 @@ CREATE TABLE "payments" (
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" VARCHAR NOT NULL,
     "email" VARCHAR(30) NOT NULL,
     "password" VARCHAR NOT NULL,
@@ -69,9 +69,9 @@ CREATE TABLE "users" (
     "avatar" TEXT,
     "role" VARCHAR NOT NULL,
     "birthdate" DATE,
-    "createdAt" TIMESTAMP(6),
+    "createdAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "createBy" VARCHAR,
-    "updateAt" TIMESTAMP(6),
+    "updateAt" TIMESTAMP(3),
     "updateBy" VARCHAR,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")

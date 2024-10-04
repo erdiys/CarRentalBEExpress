@@ -8,14 +8,14 @@ datasource db {
 }
 
 model cars {
-  id            BigInt    @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String?   @db.VarChar
   manufacturer  String?   @db.VarChar
   licenseNumber String?   @db.VarChar
   seat          Int?
   baggage       Int?
   transmission  String?   @db.VarChar
-  year          DateTime? @db.Date
+  year          String?   @db.VarChar
   description   String?
   isDriver      Boolean?  @default(false)
   isAvailable   Boolean?  @default(true)
@@ -31,11 +31,11 @@ model cars {
 }
 
 model orders {
-  id             BigInt    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   orderNumber    String?   @unique @db.VarChar
-  car_id         BigInt
-  user_id        BigInt
-  payment_id     BigInt
+  car_id         Int
+  user_id        Int
+  payment_id     Int
   status         String?   @db.VarChar
   paymentReceipt String?
   total          Float?
@@ -46,13 +46,13 @@ model orders {
   createBy       String?   @db.VarChar
   updateAt       DateTime? @updatedAt
   updateBy       String?   @db.VarChar
-  cars           cars     @relation(fields: [car_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  payments       payments @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users          users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cars           cars      @relation(fields: [car_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payments       payments  @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users          users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model payments {
-  id            BigInt    @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   type          String?   @db.VarChar
   company       String?   @db.VarChar
   accountNumber String?   @db.VarChar
@@ -64,7 +64,7 @@ model payments {
 }
 
 model users {
-  id            BigInt    @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String    @db.VarChar
   email         String    @unique @db.VarChar(30)
   password      String    @db.VarChar

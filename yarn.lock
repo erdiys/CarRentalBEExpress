@@ -165,6 +165,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/client@npm:^5.20.0":
+  version: 5.20.0
+  resolution: "@prisma/client@npm:5.20.0"
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: fecac7883b6e910abb68b27017c35a5d493d4fd40b721246f57acf3ee79f6b131851b45ab3240bb1f42efe98a33ab6877d7fa37026983f514685c32b117f573c
+  languageName: node
+  linkType: hard
+
 "@prisma/debug@npm:5.20.0":
   version: 5.20.0
   resolution: "@prisma/debug@npm:5.20.0"
@@ -1680,6 +1692,7 @@ __metadata:
   resolution: "nodejs@workspace:."
   dependencies:
     "@eslint/js": ^9.11.1
+    "@prisma/client": ^5.20.0
     dotenv: ^16.4.5
     eslint: ^9.11.1
     express: ^4.21.0
