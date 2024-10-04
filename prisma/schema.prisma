@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cars {
+  id            BigInt    @id @default(autoincrement())
+  name          String?   @db.VarChar
+  manufacturer  String?   @db.VarChar
+  licenseNumber String?   @db.VarChar
+  seat          Int?
+  baggage       Int?
+  transmission  String?   @db.VarChar
+  year          DateTime? @db.Date
+  description   String?
+  isDriver      Boolean?  @default(false)
+  isAvailable   Boolean?  @default(true)
+  img           String?
+  price         Int?
+  createdAt     DateTime? @default(now()) @db.Timestamp(6)
+  createBy      String?   @db.VarChar
+  updateAt      DateTime? @updatedAt
+  updateBy      String?   @db.VarChar
+  orders        orders[]
+
+  // @@index([name], map: "cars_name_idx")
+}
+
+model orders {
+  id             BigInt    @id @default(autoincrement())
+  orderNumber    String?   @unique @db.VarChar
+  car_id         BigInt
+  user_id        BigInt
+  payment_id     BigInt
+  status         String?   @db.VarChar
+  paymentReceipt String?
+  total          Float?
+  isDriver       Boolean?
+  startTime      DateTime? @db.Timestamp(6)
+  finishTime     DateTime? @db.Timestamp(6)
+  createdAt      DateTime? @default(now()) @db.Timestamp(6)
+  createBy       String?   @db.VarChar
+  updateAt       DateTime? @updatedAt
+  updateBy       String?   @db.VarChar
+  cars           cars     @relation(fields: [car_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payments       payments @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users          users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model payments {
+  id            BigInt    @id @default(autoincrement())
+  type          String?   @db.VarChar
+  company       String?   @db.VarChar
+  accountNumber String?   @db.VarChar
+  createdAt     DateTime? @default(now()) @db.Timestamp(6)
+  createBy      String?   @db.VarChar
+  updateAt      DateTime? @updatedAt
+  updateBy      String?   @db.VarChar
+  orders        orders[]
+}
+
+model users {
+  id            BigInt    @id @default(autoincrement())
+  name          String    @db.VarChar
+  email         String    @unique @db.VarChar(30)
+  password      String    @db.VarChar
+  address       String    @db.VarChar
+  gender        String?   @db.VarChar
+  phoneNumber   String    @unique @db.VarChar
+  driverLicense String?
+  avatar        String?
+  role          String    @db.VarChar
+  birthdate     DateTime? @db.Date
+  createdAt     DateTime? @default(now()) @db.Timestamp(6)
+  createBy      String?   @db.VarChar
+  updateAt      DateTime? @updatedAt
+  updateBy      String?   @db.VarChar
+  orders        orders[]
+}
