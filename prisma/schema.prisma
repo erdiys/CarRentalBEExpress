@@ -65,16 +65,16 @@ model payments {
 
 model users {
   id            Int       @id @default(autoincrement())
-  name          String    @db.VarChar
+  name          String?   @db.VarChar
   email         String    @unique @db.VarChar(30)
   password      String    @db.VarChar
-  address       String    @db.VarChar
+  address       String?   @db.VarChar
   gender        String?   @db.VarChar
-  phoneNumber   String    @unique @db.VarChar
+  phoneNumber   String?   @unique @db.VarChar
   driverLicense String?
   avatar        String?
-  role          String    @db.VarChar
-  birthdate     DateTime? @db.Date
+  role          String   @db.VarChar
+  birthdate     String?   @db.VarChar
   createdAt     DateTime? @default(now()) @db.Timestamp(6)
   createBy      String?   @db.VarChar
   updateAt      DateTime? @updatedAt

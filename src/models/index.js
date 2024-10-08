@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -6,18 +5,16 @@ const prisma = new PrismaClient();
 class BaseModel {
   // encapsulation (not supported in  JavaScript)
   // rahasia parent. harus dipanggil  dengan this.#var
-  #pass = "12345678";
+  // #pass = "12345678";
 
   constructor(model) {
-    this.model = model;
+    this.model = prisma[model];
   }
-  get = async ({ where, include, q = {} }) => {
-    this.#pass;
+  get = async ({ where = {}, q = {} }) => {
     const { sortBy = "createdAt", sort = "desc", page = 1, limit = 10 } = q;
     const query = {
       select: this.select,
       where,
-      include,
       orderBy: {
         [sortBy]: sort
       },
@@ -27,7 +24,7 @@ class BaseModel {
 
     const [resources, count] = await prisma.$transaction([
       this.model.findMany(query),
-      this.model.count(query)
+      this.model.count()
     ]);
 
     return {
@@ -36,23 +33,34 @@ class BaseModel {
     };
   };
 
+  getById = async (id) => {
+    return this.model.findUnique({ where: { id: Number(id) } });
+  };
+
   getOne = async (query) => {
-    return this.model.findUnique({ query });
+    return this.model.findFirst(query);
   };
 
   set = async (data) => {
+    if (!data.createBy) {
+      data = { ...data };
+    }
     return this.model.create({ data });
   };
 
   update = async (id, data) => {
+    if (!data.updateBy) {
+      data = { ...data };
+    }
     return this.model.update({
-      where: { id }
+      where: { id: Number(id) },
+      data
     });
   };
 
   delete = async (id) => {
     return this.model.delete({
-      where: { id }
+      where: { id: Number(id) }
     });
   };
 

@@ -1,9 +1,14 @@
+// abstraction / abtract class
+const validation = require("../middlewares/validation");
+const { Prisma } = require("@prisma/client");
+
 class BaseController {
   constructor(model) {
     this.model = model;
+    this.validation = validation;
   }
 
-  getAll = async (req, res) => {
+  getAll = async (req, res, next) => {
     try {
       const {
         sortBy = "createdAt",
@@ -11,101 +16,132 @@ class BaseController {
         page = 1,
         limit = 10
       } = req.query;
-      const { resources, count } = await this.model.findAndCountAll({
-        sortBy,
-        sort,
-        page,
-        limit
+
+      const { resources, count } = await this.model.get({
+        q: {
+          sortBy,
+          sort,
+          page,
+          limit
+        }
       });
 
       return res.status(200).json(
         this.apiSend({
           code: 200,
           status: "success",
-          message: "Data retrieved successfully",
+          message: "Data fetched successfully",
           data: resources,
           pagination: {
-            total: count,
             page,
             limit,
-            totalPages: Math.ceil(count / limit)
+            totalPage: Math.ceil(count / limit),
+            total: count
           }
         })
       );
-    } catch (error) {
-      console.log(error);
-      //   if (error.name === "SequelizeDatabaseError") {
-      //     this.apiSend({
-      //       code: 500,
-      //       status: "error",
-      //       message: "Database error"
-      //     });
-      //   }
+    } catch (err) {
+      // eslint-disable-next-line no-undef
+      next(new ServerError(err));
     }
   };
 
-  get = async (req, res) => {
+  get = async (req, res, next) => {
     try {
-      const resources = await this.model.getById(req.params.id);
+      const { id } = req.params;
+      const resource = await this.model.getById(id);
+      if (!resource) {
+        // eslint-disable-next-line no-undef
+        next(new NotFoundError(null, `Data with id=${id} not found`));
+      }
       return res.status(200).json(
         this.apiSend({
           status: "success",
-          message: "Data retrieved successfully",
-          data: resources
+          message: "Data fetched successfully",
+          data: resource
         })
       );
-    } catch (error) {
-      console.log(error);
-    //   throw new NotFoundError();
+    } catch (err) {
+      // eslint-disable-next-line no-undef
+      next(new ServerError(err));
     }
   };
 
-  create = async (req, res) => {
+  create = async (req, res, next) => {
     try {
-      const resources = await this.model.set(req.body);
+      const resource = await this.model.set({
+        ...req.body,
+        createBy: req?.user?.name
+      });
+
       return res.status(201).json(
         this.apiSend({
           status: "success",
           message: "Data created successfully",
-          data: resources
+          data: resource
         })
       );
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      // eslint-disable-next-line no-undef
+      return next(new ServerError(err));
     }
   };
 
-  update = async (req, res) => {
+  update = async (req, res, next) => {
+    const { id } = req.params;
     try {
-      const resources = await this.model.update(req.params.id, req.body);
+      const resource = await this.model.update(id, {
+        ...req.body,
+        updateBy: req?.user?.name
+      });
+
       return res.status(200).json(
         this.apiSend({
           status: "success",
           message: "Data updated successfully",
-          data: resources
+          data: resource
         })
       );
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      //handle prisma not found error
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          // eslint-disable-next-line no-undef
+          return next(new NotFoundError(err, `Car with id=${id} not found!`));
+        }
+      }
+
+      // eslint-disable-next-line no-undef
+      next(new ServerError(err));
     }
   };
 
-  delete = async (req, res) => {
+  delete = async (req, res, next) => {
+    const { id } = req.params;
     try {
-      const resources = await this.model.delete(req.params.id);
-      return res.status(204).json(
+      const resource = await this.model.delete(id);
+
+      return res.status(200).json(
         this.apiSend({
           status: "success",
-          message: `Data with id ${req.params.id} deleted successfully`,
-          data: resources
+          message: `Data with id ${id} deleted successfully`,
+          data: resource
         })
       );
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      //handle prisma not found error
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          // eslint-disable-next-line no-undef
+          return next(new NotFoundError(err, `Car with id=${id} not found!`));
+        }
+      }
+      // eslint-disable-next-line no-undef
+      next(new ServerError(err));
     }
   };
 
-  apiSend = ({ code, status, message, data, pagination }) => {
+  apiSend({ code, status, message, data, pagination }) {
     return {
       code,
       status,
@@ -113,7 +149,7 @@ class BaseController {
       data,
       ...(pagination && pagination)
     };
-  };
+  }
 }
 
 module.exports = BaseController;
