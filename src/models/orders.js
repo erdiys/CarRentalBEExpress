@@ -9,14 +9,28 @@ class OrderModel extends BaseModel {
       id: true,
       car_id: true,
       user_id: true,
-      payment_id: false,
       status: true,
       orderNumber: true,
-      paymentReceipt: false,
       total: true,
       isDriver: true,
+      isExpired: true,
       startTime: true,
-      finishTime: true
+      finishTime: true,
+      users: {
+        select: {
+          name: true,
+          email: true,
+          phoneNumber: true,
+          address: true
+        }
+      },
+      cars: {
+        select: {
+          name: true,
+          manufacturer: true,
+          licenseNumber: true
+        }
+      }
     };
   }
 }

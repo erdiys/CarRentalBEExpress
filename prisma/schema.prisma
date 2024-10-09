@@ -35,19 +35,20 @@ model orders {
   orderNumber    String?   @unique @db.VarChar
   car_id         Int
   user_id        Int
-  payment_id     Int
+  payment_id     Int?
   status         String?   @db.VarChar
   paymentReceipt String?
   total          Float?
   isDriver       Boolean?
-  startTime      DateTime? @db.Timestamp(6)
-  finishTime     DateTime? @db.Timestamp(6)
+  isExpired      Boolean?  @default(false)
+  startTime      String?   @db.VarChar
+  finishTime     String?   @db.VarChar
   createdAt      DateTime? @default(now()) @db.Timestamp(6)
   createBy       String?   @db.VarChar
   updateAt       DateTime? @updatedAt
   updateBy       String?   @db.VarChar
   cars           cars      @relation(fields: [car_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  payments       payments  @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payments       payments? @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users          users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -73,7 +74,7 @@ model users {
   phoneNumber   String?   @unique @db.VarChar
   driverLicense String?
   avatar        String?
-  role          String   @db.VarChar
+  role          String    @db.VarChar
   birthdate     String?   @db.VarChar
   createdAt     DateTime? @default(now()) @db.Timestamp(6)
   createBy      String?   @db.VarChar

@@ -24,7 +24,7 @@ class BaseModel {
 
     const [resources, count] = await prisma.$transaction([
       this.model.findMany(query),
-      this.model.count()
+      this.model.count(where)
     ]);
 
     return {
@@ -33,22 +33,22 @@ class BaseModel {
     };
   };
 
-  getById = async (id) => {
-    return this.model.findUnique({ where: { id: Number(id) } });
+  getById = (id, res) => {
+    return this.model.findUnique({ where: { id: Number(id) }, ...res });
   };
 
-  getOne = async (query) => {
+  getOne = (query) => {
     return this.model.findFirst(query);
   };
 
-  set = async (data) => {
+  set = (data) => {
     if (!data.createBy) {
       data = { ...data };
     }
     return this.model.create({ data });
   };
 
-  update = async (id, data) => {
+  update = (id, data) => {
     if (!data.updateBy) {
       data = { ...data };
     }
@@ -58,17 +58,21 @@ class BaseModel {
     });
   };
 
-  delete = async (id) => {
+  delete = (id) => {
     return this.model.delete({
       where: { id: Number(id) }
     });
   };
 
-  count = async () => {
+  count = () => {
     return this.model.count({
       where: this.where
     });
   };
+
+  transaction = async(query) => {
+    return prisma.$transaction(query)
+  }
 }
 
 module.exports = BaseModel;
