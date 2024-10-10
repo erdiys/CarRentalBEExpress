@@ -1,15 +1,18 @@
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
-const PORT = 3000;
+const path = require("path");
 
+const errorHandler = require("./src/middlewares/errorHandler");
+const PORT = 3000;
 const app = express();
 const server = http.createServer(app);
-const errorHandler = require("./src/middlewares/errorHandler");
 
 require("./src/helpers/errors");
 
 app.use(express.json());
+
+app.use("/public", express.static(path.resolve( __dirname, "public")));
 
 require("./src/routes")(app);
 
