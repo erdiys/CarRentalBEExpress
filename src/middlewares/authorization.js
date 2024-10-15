@@ -4,7 +4,7 @@ const user = new UserModel();
 
 const authorize = async (req, res, next) => {
   try {
-    const bearerToken = req.headers.authorization;
+    const bearerToken = req.headers.authorization;    
     if (!bearerToken) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -22,7 +22,7 @@ const authorize = async (req, res, next) => {
 
 const checkRole = (roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.user.role_id)) {
       return res.status(403).json({ message: "Forbidden" });
     }
     next();

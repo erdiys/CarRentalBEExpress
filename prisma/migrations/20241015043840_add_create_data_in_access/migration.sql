@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "access" ADD COLUMN     "createBy" VARCHAR,
+ADD COLUMN     "createdAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "updateAt" TIMESTAMP(3),
+ADD COLUMN     "updateBy" VARCHAR;

@@ -22,9 +22,9 @@ model cars {
   img           String?
   price         Int?
   createdAt     DateTime? @default(now()) @db.Timestamp(6)
-  createBy      String?   @db.VarChar
-  updateAt      DateTime? @updatedAt
-  updateBy      String?   @db.VarChar
+  createdBy      String?   @db.VarChar
+  updatedAt      DateTime? @updatedAt
+  updatedBy      String?   @db.VarChar
   orders        orders[]
 
   // @@index([name], map: "cars_name_idx")
@@ -44,9 +44,9 @@ model orders {
   startTime      String?   @db.VarChar
   finishTime     String?   @db.VarChar
   createdAt      DateTime? @default(now()) @db.Timestamp(6)
-  createBy       String?   @db.VarChar
-  updateAt       DateTime? @updatedAt
-  updateBy       String?   @db.VarChar
+  createdBy       String?   @db.VarChar
+  updatedAt       DateTime? @updatedAt
+  updatedBy       String?   @db.VarChar
   cars           cars      @relation(fields: [car_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   payments       payments? @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users          users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -58,9 +58,9 @@ model payments {
   company       String?   @db.VarChar
   accountNumber String?   @db.VarChar
   createdAt     DateTime? @default(now()) @db.Timestamp(6)
-  createBy      String?   @db.VarChar
-  updateAt      DateTime? @updatedAt
-  updateBy      String?   @db.VarChar
+  createdBy      String?   @db.VarChar
+  updatedAt      DateTime? @updatedAt
+  updatedBy      String?   @db.VarChar
   orders        orders[]
 }
 
@@ -74,11 +74,55 @@ model users {
   phoneNumber   String?   @unique @db.VarChar
   driverLicense String?
   avatar        String?
-  role          String    @db.VarChar
   birthdate     String?   @db.VarChar
+  role_id       Int
   createdAt     DateTime? @default(now()) @db.Timestamp(6)
-  createBy      String?   @db.VarChar
-  updateAt      DateTime? @updatedAt
-  updateBy      String?   @db.VarChar
+  createdBy      String?   @db.VarChar
+  updatedAt      DateTime? @updatedAt
+  updatedBy      String?   @db.VarChar
   orders        orders[]
+  role          roles     @relation(fields: [role_id], references: [id], onDelete: Cascade)
+}
+
+model roles {
+  id        Int       @id @default(autoincrement())
+  role      String    @unique
+  createdAt DateTime? @default(now()) @db.Timestamp(6)
+  createdBy  String?   @db.VarChar
+  updatedAt  DateTime? @updatedAt
+  updatedBy  String?   @db.VarChar
+  access    access[]
+  users     users[]
+}
+
+model menus {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  title      String
+  icon       String?
+  path       String?
+  isSubmenu  Boolean   @default(false)
+  parent_id  Int?
+  permission String[]
+  createdAt  DateTime? @default(now()) @db.Timestamp(6)
+  createdBy   String?   @db.VarChar
+  updatedAt   DateTime? @updatedAt
+  updatedBy   String?   @db.VarChar
+  submenu    menus?    @relation("submenu", fields: [parent_id], references: [id])
+  parents    menus[]   @relation("submenu")
+  access     access[]
+}
+
+model access {
+  id        Int       @id @default(autoincrement())
+  role_id   Int
+  menu_id   Int
+  visible   Boolean   @default(true)
+  grant     Json
+  createdAt DateTime? @default(now()) @db.Timestamp(6)
+  createdBy  String?   @db.VarChar
+  updatedAt  DateTime? @updatedAt
+  updatedBy  String?   @db.VarChar
+  role      roles     @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  menu      menus     @relation(fields: [menu_id], references: [id], onDelete: Cascade)
 }

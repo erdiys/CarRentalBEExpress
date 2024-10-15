@@ -42,14 +42,14 @@ class BaseModel {
   };
 
   set = (data) => {
-    if (!data.createBy) {
+    if (!data.createdBy) {
       data = { ...data };
     }
     return this.model.create({ data });
   };
 
   update = (id, data) => {
-    if (!data.updateBy) {
+    if (!data.updatedBy) {
       data = { ...data };
     }
     return this.model.update({

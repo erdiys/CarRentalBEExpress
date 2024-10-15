@@ -4,6 +4,8 @@ const BaseController = require("../base");
 const UserModel = require("../../models/users");
 const express = require("express");
 const { encryptPassword } = require("../../helpers/bcrypt");
+const rbac = require("../../middlewares/rbac");
+const { authorize } = require("../../middlewares/authorization");
 const router = express.Router();
 
 const users = new UserModel();
@@ -14,30 +16,38 @@ const userSchema = Joi.object({
   password: Joi.string().required(),
   address: Joi.string().required(),
   phoneNumber: Joi.string().required(),
-  role: Joi.string().required(),
+  role_id: Joi.number().required(),
   avatar: Joi.string().uri().allow(null),
   driverLicense: Joi.string().allow(null),
   birthdate: Joi.string(),
-  createBy: Joi.string().allow(null),
-  updateBy: Joi.string().allow(null)
+  createdBy: Joi.string().allow(null),
+  updatedBy: Joi.string().allow(null)
 });
 
 class UsersController extends BaseController {
   constructor(model) {
     super(model);
-    router.get("/", this.getAll);
+    router.get("/", authorize, rbac("users", "readAll"), this.getAll);
     router.post(
       "/",
-      [this.validation(userSchema), this.checkUnique, this.encrypt],
+      this.validation(userSchema),
+      authorize,
+      rbac("users", "create"),
+      this.checkUnique,
+      this.encrypt,
       this.create
     );
-    router.get("/:id", this.get);
+    router.get("/:id", authorize, rbac("users", "read"), this.get);
     router.put(
       "/:id",
-      [this.validation(userSchema), this.checkUnique, this.encrypt],
+      this.validation(userSchema),
+      authorize,
+      rbac("users", "update"),
+      this.checkUnique,
+      this.encrypt,
       this.update
     );
-    router.delete("/:id", this.delete);
+    router.delete("/:id", authorize, rbac("users", "delete"), this.delete);
   }
 
   checkUnique = async (req, res, next) => {
@@ -60,7 +70,7 @@ class UsersController extends BaseController {
   encrypt = async (req, res, next) => {
     req.body.password = await encryptPassword(req.body.password);
     next();
-  }
+  };
 }
 
 new UsersController(users);

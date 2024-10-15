@@ -3,6 +3,7 @@ const Joi = require("joi");
 const BaseController = require("../base");
 const OrderModel = require("../../models/orders");
 const CarModel = require("../../models/cars");
+const createInvoice = require("../../helpers/createInvoice");
 const express = require("express");
 const { authorize } = require("../../middlewares/authorization");
 const router = express.Router();
@@ -19,8 +20,8 @@ const orderUpdateSchema = Joi.object({
   isDriver: Joi.boolean().allow(null),
   startTime: Joi.any().allow(null),
   finishTime: Joi.any().allow(null),
-  createBy: Joi.string().allow(null),
-  updateBy: Joi.string().allow(null)
+  createdBy: Joi.string().allow(null),
+  updatedBy: Joi.string().allow(null)
 });
 
 const orderSchema = Joi.object({
@@ -28,8 +29,8 @@ const orderSchema = Joi.object({
   isDriver: Joi.boolean().required(),
   startTime: Joi.string().required(),
   finishTime: Joi.string().required(),
-  createBy: Joi.string().allow(null),
-  updateBy: Joi.string().allow(null)
+  createdBy: Joi.string().allow(null),
+  updatedBy: Joi.string().allow(null)
 });
 class OrdersController extends BaseController {
   constructor(model) {
@@ -37,6 +38,8 @@ class OrdersController extends BaseController {
     router.get("/", authorize, this.getAll);
     router.post("/", this.validation(orderSchema), authorize, this.genOrder);
     router.get("/:id", authorize, this.getIDwUser);
+    router.get("/:id/invoice", authorize, this.downloadInvoice);
+    router.put("/:id/payment", authorize, this.payment);
     // router.put(
     //   "/:id",
     //   this.validation(orderUpdateSchema),
@@ -88,8 +91,8 @@ class OrdersController extends BaseController {
           isDriver,
           status: "pending",
           isExpired: false,
-          createBy: user.name === null ? user.email : user.name,
-          updateBy: user.name === null ? user.email : user.name,
+          createdBy: user.name === null ? user.email : user.name,
+          updatedBy: user.name === null ? user.email : user.name,
           total: orderPrice,
           cars: {
             connect: {
@@ -151,7 +154,7 @@ class OrdersController extends BaseController {
         this.model.update(id, {
           status: "cancel",
           isExpired: true,
-          updateBy:
+          updatedBy:
             order.users.name === null ? order.users.email : order.users.name
         }),
         carModel.update(order.car_id, { isAvailable: true })
@@ -204,6 +207,72 @@ class OrdersController extends BaseController {
       next(new ServerError(err));
     }
   };
+
+  payment = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const { payment } = req.body;
+      const order = await this.model.getById(id);
+
+      if (payment !== order.total) {
+        // eslint-disable-next-line no-undef
+        return next(new ValidationError("Payment not valid"));
+      }
+
+      const orderPaid = await this.model.update(id, {
+        status: "paid",
+      });
+
+      return res.status(200).json(
+        this.apiSend({
+          code: 200,
+          status: "success",
+          message: "Order Paid successfully",
+          data: orderPaid,
+        })
+      );
+    } catch (error) {
+      return next(error);
+    }
+  };
+  
+  downloadInvoice = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const order = await this.model.getById(id, {
+        order_no: true,
+        createdDt: true,
+        status: true,
+        user_id: true,
+        start_time: true,
+        end_time: true,
+        total: true,
+        cars: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+          },
+        },
+        users:{
+          select:{
+            id: true,
+            fullname: true,
+            address: true
+          }
+        }
+      });
+      
+      if (order.status !== "paid") {
+        // eslint-disable-next-line no-undef
+        return next(new ValidationError("Order not paid!"));
+      }
+
+      createInvoice(order, res);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 new OrdersController(orders);

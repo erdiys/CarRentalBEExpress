@@ -12,7 +12,7 @@ class UserModel extends BaseModel {
       password: true,
       address: true,
       phoneNumber: true,
-      role: true,
+      role_id: true,
       avatar: true,
     };
   }

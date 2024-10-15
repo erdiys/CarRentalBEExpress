@@ -19,8 +19,8 @@ const signupSchema = Joi.object({
       "string.min": `Password length must be at least {#limit} characters long`
     })
     .required(),
-  createBy: Joi.string().allow(null),
-  updateBy: Joi.string().allow(null)
+  createdBy: Joi.string().allow(null),
+  updatedBy: Joi.string().allow(null)
 });
 
 const signinSchema = Joi.object({
@@ -51,7 +51,7 @@ class AuthController extends BaseController {
         return next(new ValidationError("Invalid email or password"));
       }
 
-      const token = createToken({ id: user.id, role: user.role });
+      const token = createToken({ id: user.id, role_id: user.role_id });
 
       return res.status(200).json(
         this.apiSend({
@@ -86,7 +86,7 @@ class AuthController extends BaseController {
       const newUser = await this.model.set({
         email: email,
         password: await encryptPassword(password),
-        role: "Customer"
+        role_id: 3
       });
 
       return res.status(201).json(

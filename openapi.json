@@ -1,0 +1,1100 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger Petstore - OpenAPI 3.0",
+    "description": "",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "cars",
+      "description": "Everything about your Cars"
+    },
+    {
+      "name": "orders",
+      "description": "Access to orders"
+    },
+    {
+      "name": "users",
+      "description": "Operations about users"
+    },
+    {
+      "name": "auth",
+      "description": "Operations authentication users"
+    }
+  ],
+  "paths": {
+    "/cars": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Get all cars",
+        "description": "Get full list of all cars",
+        "operationId": "getCars",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Car not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:cars",
+              "read:cars"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Add a new car",
+        "description": "Add a new car",
+        "operationId": "addCar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "car": {
+                  "$ref": "#/components/examples/Car"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:cars",
+              "read:cars"
+            ]
+          }
+        ]
+      }
+    },
+    "/cars/{id}": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Get car by id",
+        "description": "Get full data of a car",
+        "operationId": "getCarById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the car to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Car not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:cars",
+              "read:cars"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Update car by id",
+        "description": "Update the datas of a car",
+        "operationId": "UpdateCarById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the car to update"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "car": {
+                  "$ref": "#/components/examples/Car"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Car not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:cars",
+              "read:cars"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "cars"
+        ],
+        "summary": "Delete car by id",
+        "description": "Delete the data of a car",
+        "operationId": "DeleteCarById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the car to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Car not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:cars",
+              "read:cars"
+            ]
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get all users",
+        "description": "Get full list of all users",
+        "operationId": "getUsers",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:users",
+              "read:users"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Add a new user",
+        "description": "Add a new user",
+        "operationId": "addUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "user": {
+                  "$ref": "#/components/examples/User"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:users",
+              "read:users"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user by id",
+        "description": "Get full data of a user",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the user to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:users",
+              "read:users"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update user by id",
+        "description": "Update the datas of a user",
+        "operationId": "UpdateUserById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the user to update"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "car": {
+                  "$ref": "#/components/examples/User"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Car not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:users",
+              "read:users"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete user by id",
+        "description": "Delete the data of a user",
+        "operationId": "DeleteUserById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the user to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:users",
+              "read:users"
+            ]
+          }
+        ]
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Get all orders",
+        "description": "Get full list of all orders",
+        "operationId": "getOrders",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderInsert"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:orders",
+              "read:orders"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Add a new order",
+        "description": "Add a new order",
+        "operationId": "addOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "order": {
+                  "$ref": "#/components/examples/OrderInsert"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderInsert"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:orders",
+              "read:orders"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Car": {
+        "required": [
+          "name",
+          "price",
+          "manufacturer",
+          "isDriver"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "Yaris"
+          },
+          "manufacturer": {
+            "type": "string",
+            "example": "Toyota"
+          },
+          "licenseNumber": {
+            "type": "string",
+            "example": "G6666CAK"
+          },
+          "price": {
+            "type": "integer",
+            "example": 400000
+          },
+          "isDriver": {
+            "type": "boolean",
+            "example": true
+          },
+          "seat": {
+            "type": "integer",
+            "example": 4
+          },
+          "baggage": {
+            "type": "integer",
+            "example": 2
+          },
+          "transmission": {
+            "type": "string",
+            "example": "Automatic"
+          },
+          "year": {
+            "type": "string",
+            "example": "2011-05-22T00:00:00.000Z"
+          },
+          "description": {
+            "type": "string",
+            "example": "Mobil yang digunakan di dalam kota dan antar kota"
+          }
+        }
+      },
+      "User": {
+        "required": [
+          "name",
+          "email",
+          "password",
+          "address",
+          "phoneNumber",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@domain.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "YourPa$$w0rd"
+          },
+          "address": {
+            "type": "string",
+            "example": "My City Name"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "087654321234"
+          },
+          "role": {
+            "type": "string",
+            "example": "User"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "url://something"
+          },
+          "driverLicense": {
+            "type": "string",
+            "example": "06721174761"
+          },
+          "birthdate": {
+            "type": "string",
+            "example": "2018-03-01T00:00:00.000Z"
+          }
+        }
+      },
+      "OrderUpdate": {
+        "required": [
+          "car_id",
+          "user_id",
+          "status",
+          "orderNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "car_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "example": "pending"
+          },
+          "orderNumber": {
+            "type": "string",
+            "example": "INV/2024-01-07/1"
+          },
+          "isDriver": {
+            "type": "boolean",
+            "example": true
+          },
+          "startTime": {
+            "type": "string",
+            "example": "2024-01-08"
+          },
+          "finishTime": {
+            "type": "string",
+            "example": "2024-01-10"
+          }
+        }
+      },
+      "OrderInsert": {
+        "required": [
+          "car_id",
+          "isDriver",
+          "startTime",
+          "finishTime"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "car_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "example": "pending"
+          },
+          "orderNumber": {
+            "type": "string",
+            "example": "INV/2024-01-07/1"
+          },
+          "isDriver": {
+            "type": "boolean",
+            "example": true
+          },
+          "startTime": {
+            "type": "string",
+            "example": "2024-01-08"
+          },
+          "finishTime": {
+            "type": "string",
+            "example": "2024-01-10"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "##default"
+        }
+      }
+    },
+    "requestBodies": {
+      "Car": {
+        "description": "Car object that needs to be added",
+        "content": {
+          "application/json": {
+            "example": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Yaris"
+                },
+                "manufacturer": {
+                  "type": "string",
+                  "example": "Toyota"
+                },
+                "licenseNumber": {
+                  "type": "string",
+                  "example": "G6666CAK"
+                },
+                "price": {
+                  "type": "integer",
+                  "example": 400000
+                },
+                "isDriver": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "seat": {
+                  "type": "integer",
+                  "example": 4
+                },
+                "baggage": {
+                  "type": "integer",
+                  "example": 2
+                },
+                "transmission": {
+                  "type": "string",
+                  "example": "Automatic"
+                },
+                "year": {
+                  "type": "string",
+                  "example": "2011-05-22T00:00:00.000Z"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Mobil yang digunakan di dalam kota dan antar kota"
+                }
+              }
+            }
+          }
+        }
+      },
+      "User": {
+        "description": "User object that needs to be added",
+        "content": {
+          "application/json": {
+            "example": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john.doe@domain.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "YourPa$$w0rd"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "My City Name"
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "example": "087654321234"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "User"
+                },
+                "avatar": {
+                  "type": "string",
+                  "example": "url://something"
+                },
+                "driverLicense": {
+                  "type": "string",
+                  "example": "06721174761"
+                },
+                "birthdate": {
+                  "type": "string",
+                  "example": "2018-02-29"
+                }
+              }
+            }
+          }
+        }
+      },
+      "OrderUpdate": {
+        "description": "Order object that needs to be added",
+        "content": {
+          "application/json": {
+            "example": {
+              "type": "object",
+              "properties": {
+                "car_id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "user_id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "status": {
+                  "type": "string",
+                  "example": "pending"
+                },
+                "orderNumber": {
+                  "type": "string",
+                  "example": "INV/2024-01-07/1"
+                },
+                "isDriver": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "startTime": {
+                  "type": "string",
+                  "example": "2024-01-08"
+                },
+                "finishTime": {
+                  "type": "string",
+                  "example": "2024-01-10"
+                }
+              }
+            }
+          }
+        }
+      },
+      "OrderInsert": {
+        "description": "Order object that needs to be added",
+        "content": {
+          "application/json": {
+            "example": {
+              "type": "object",
+              "properties": {
+                "car_id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "isDriver": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "startTime": {
+                  "type": "string",
+                  "example": "2024-01-08"
+                },
+                "finishTime": {
+                  "type": "string",
+                  "example": "2024-01-10"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserArray": {
+        "description": "List of user object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "Car": {
+        "value": {
+          "name": "Yaris",
+          "manufacturer": "Toyota",
+          "licenseNumber": "G6666CAK",
+          "price": 400000,
+          "isDriver": true,
+          "seat": 4,
+          "baggage": 2,
+          "transmission": "Automatic",
+          "year": "2011-05-22T00:00:00.000Z",
+          "description": "Mobil yang digunakan di dalam kota dan antar kota"
+        }
+      },
+      "User": {
+        "value": {
+          "name": "John Doe",
+          "email": "john.doe@domain.com",
+          "password": "YourPa$$w0rd",
+          "address": "My City Name",
+          "phoneNumber": "087654321234",
+          "role": "User",
+          "avatar": "url://something",
+          "driverLicense": "06721174761",
+          "birthdate": "2018-02-29"
+        }
+      },
+      "OrderUpdate": {
+        "value": {
+          "car_id": 1,
+          "user_id": 1,
+          "status": "pending",
+          "orderNumber": "INV/2024-01-07/1",
+          "isDriver": true,
+          "startTime": "2024-01-08",
+          "finishTime": "2024-01-10"
+        }
+      },
+      "OrderInsert": {
+        "value": {
+          "car_id": 1,
+          "isDriver": true,
+          "startTime": "2024-01-08",
+          "finishTime": "2024-01-10"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
