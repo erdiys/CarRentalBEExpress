@@ -1,0 +1,7 @@
+name: "YourProjectName"
+language: node
+appmap_dir: tmp/appmap
+packages:
+  - path: src
+    # You can add more paths if needed, for example:
+    # - path: lib

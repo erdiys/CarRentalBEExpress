@@ -1,4 +1,8 @@
-require("dotenv").config();
+const envPath =
+  process.env.NODE_ENV === "development"
+    ? ".env"
+    : `.env.${process.env.NODE_ENV}`;
+require("dotenv").config({ path: envPath });
 const express = require("express");
 const http = require("http");
 const path = require("path");
@@ -37,5 +41,7 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port http://localhost:${PORT}`);
 });
+
+module.exports = server;
