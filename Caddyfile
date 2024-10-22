@@ -1,0 +1,7 @@
+http://car-rental-eys.duckdns.org {
+        redir https://car-rental-eys.duckdns.org{uri} permanent
+}
+
+car-rental-eys.duckdns.org {
+        reverse_proxy :3000
+}
